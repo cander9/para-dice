@@ -100,25 +100,31 @@ public class MainActivity extends AppCompatActivity {
 
     public void compTurn(){
         compTurn = true;
-        while(compTurn) {
-            int tempScore = roll()+1;
-            compTurnScore = compTurnScore + tempScore;
-            if(tempScore == 1){
-                compTurn = false;
-                compTurnScore = 0;
-                TextView turnScore = (TextView)findViewById(R.id.turnScore);
-                turnScore.setText("turn score: 0");
-                endTurn();
-            }
-            else{
-                TextView turnScore = (TextView)findViewById(R.id.turnScore);
-                turnScore.setText("turn score: "+compTurnScore);
-                tempScore = roll()+1;
-            }
-            if(compTurnScore>9){
-                compTurn = false;
-                endTurn();
-            }
+        compRoll();
+        if(compTurn){
+            
+            compRoll();
+        }
+
+    }
+
+    public void compRoll(){
+        int tempScore = roll()+1;
+        compTurnScore = compTurnScore + tempScore;
+        if(tempScore == 1){
+            compTurn = false;
+            compTurnScore = 0;
+            TextView turnScore = (TextView)findViewById(R.id.turnScore);
+            turnScore.setText("turn score: 0");
+            endTurn();
+        }
+        else{
+            TextView turnScore = (TextView)findViewById(R.id.turnScore);
+            turnScore.setText("turn score: "+compTurnScore);
+        }
+        if(compTurnScore>9){
+            compTurn = false;
+            endTurn();
         }
     }
 
