@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     int userTurnScore = 0;
     int compTotalScore = 0;
     int compTurnScore = 0;
+    boolean compTurn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,18 +26,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void rollHandler(View view){
-        int score = roll()+1;
-        TextView turnScore = (TextView)findViewById(R.id.turnScore);
-        if(score==1){
-            userTurnScore = 0;
-            turnScore.setText("turn score: "+userTurnScore);
-            endTurn();
-        }
-        else{
-            userTurnScore = userTurnScore+score;
-            turnScore.setText("turn score: "+userTurnScore);
-            Button rolling = (Button)findViewById(R.id.roll);
-            rolling.setText("REROLL");
+        if(!compTurn) {
+            int score = roll() + 1;
+            TextView turnScore = (TextView) findViewById(R.id.turnScore);
+            if (score == 1) {
+                userTurnScore = 0;
+                turnScore.setText("turn score: " + userTurnScore);
+                endTurn();
+                compTurn();
+            } else {
+                userTurnScore = userTurnScore + score;
+                turnScore.setText("turn score: " + userTurnScore);
+                Button rolling = (Button) findViewById(R.id.roll);
+                rolling.setText("REROLL");
+            }
         }
     }
 
@@ -52,19 +55,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void endTurnHandler(View view){
-        endTurn();
+        userTotalScore = userTotalScore+userTurnScore;
+        TextView score = (TextView)findViewById(R.id.userScore);
+        score.setText("your score: "+userTotalScore);
+        userTurnScore = 0;
+        TextView turnScore = (TextView)findViewById(R.id.turnScore);
+        turnScore.setText("turn score: "+userTurnScore);
+        Button rolling = (Button)findViewById(R.id.roll);
+        rolling.setText("ROLL");
+        compTurn();
     }
 
     public void endTurn(){
-       userTotalScore = userTotalScore+userTurnScore;
-       TextView score = (TextView)findViewById(R.id.userScore);
-       score.setText("your score: "+userTotalScore);
-       userTurnScore = 0;
+       compTotalScore = compTotalScore+compTurnScore;
+       TextView score = (TextView)findViewById(R.id.compScore);
+       score.setText("computer score: "+compTotalScore);
+       compTurnScore = 0;
        TextView turnScore = (TextView)findViewById(R.id.turnScore);
-       turnScore.setText("turn score: "+userTurnScore);
+       turnScore.setText("turn score: ");
        Button rolling = (Button)findViewById(R.id.roll);
        rolling.setText("ROLL");
-
     }
 
     public void newGameHandler(View view){
@@ -75,17 +85,41 @@ public class MainActivity extends AppCompatActivity {
         Button rolling = (Button)findViewById(R.id.roll);
         rolling.setText("ROLL");
         TextView turnScore = (TextView)findViewById(R.id.turnScore);
-        turnScore.setText("turn score: 0");
+        turnScore.setText("turn score:");
         TextView uScore = (TextView)findViewById(R.id.userScore);
-        uScore.setText("your score: 0");
+        uScore.setText("your score:");
         TextView cScore = (TextView)findViewById(R.id.compScore);
-        cScore.setText("computer score: 0");
+        cScore.setText("computer score:");
         ImageView prevIMG = (ImageView)findViewById(R.id.imageView);
         String img = "d0";
         int resID = getResources().getIdentifier(img , "drawable", getPackageName());
         Drawable image = getResources().getDrawable(resID);
         prevIMG.setImageDrawable(image);
 
+    }
+
+    public void compTurn(){
+        compTurn = true;
+        while(compTurn) {
+            int tempScore = roll()+1;
+            compTurnScore = compTurnScore + tempScore;
+            if(tempScore == 1){
+                compTurn = false;
+                compTurnScore = 0;
+                TextView turnScore = (TextView)findViewById(R.id.turnScore);
+                turnScore.setText("turn score: 0");
+                endTurn();
+            }
+            else{
+                TextView turnScore = (TextView)findViewById(R.id.turnScore);
+                turnScore.setText("turn score: "+compTurnScore);
+                tempScore = roll()+1;
+            }
+            if(compTurnScore>9){
+                compTurn = false;
+                endTurn();
+            }
+        }
     }
 
 }
