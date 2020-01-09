@@ -41,6 +41,24 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    Handler ouchHandler = new Handler();
+    Runnable ouchRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            endTurnHandler((Button)findViewById(R.id.endTurn));
+        }
+    };
+
+    Handler youchHandler = new Handler();
+    Runnable youchRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            endTurn();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,13 +69,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void rollHandler(View view){
         if(!compTurn) {
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            label.setText("your turn!");
             int score = roll() + 1;
             TextView turnScore = (TextView) findViewById(R.id.turnScore);
             if (score == 1) {
                 userTurnScore = 0;
                 turnScore.setText("turn score: " + userTurnScore);
-                endTurn();
-                compTurn();
+
+                startTime = System.currentTimeMillis();
+                label.setText("You rolled a one :(");
+                ouchHandler.postDelayed(ouchRunnable, 750);
             } else {
                 userTurnScore = userTurnScore + score;
                 turnScore.setText("turn score: " + userTurnScore);
@@ -123,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
         int resID = getResources().getIdentifier(img , "drawable", getPackageName());
         Drawable image = getResources().getDrawable(resID);
         prevIMG.setImageDrawable(image);
+        TextView label = (TextView)findViewById(R.id.turninfo);
+        label.setText("your turn!");
 
     }
 
@@ -130,8 +154,10 @@ public class MainActivity extends AppCompatActivity {
         compTurn = true;
         compRoll();
         if(compTurn){
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            label.setText("It's the computer's turn");
             startTime = System.currentTimeMillis();
-            compHandler.postDelayed(compRunnable, 2000);
+            compHandler.postDelayed(compRunnable, 2750);
         }
     }
 
@@ -143,7 +169,11 @@ public class MainActivity extends AppCompatActivity {
             compTurnScore = 0;
             TextView turnScore = (TextView)findViewById(R.id.turnScore);
             turnScore.setText("turn score: 0");
-            endTurn();
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            startTime = System.currentTimeMillis();
+
+            label.setText("The computer rolled a one!");
+            youchHandler.postDelayed(youchRunnable, 750);
         }
         else{
             TextView turnScore = (TextView)findViewById(R.id.turnScore);
@@ -151,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if(compTurnScore>9){
             compTurn = false;
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            label.setText("The computer has ended it's your turn");
             endTurn();
         }
     }
