@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     int compTotalScore = 0;
     int compTurnScore = 0;
     boolean compTurn = false;
+    boolean win = false;
     long startTime = 0;
 
     //runs without a timer by reposting this handler at the end of the runnable
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void rollHandler(View view){
-        if(!compTurn) {
+        if(!compTurn&&!win) {
             TextView label = (TextView)findViewById(R.id.turninfo);
             label.setText("your turn!");
             int score = roll() + 1;
@@ -113,7 +114,15 @@ public class MainActivity extends AppCompatActivity {
         turnScore.setText("turn score: "+userTurnScore);
         Button rolling = (Button)findViewById(R.id.roll);
         rolling.setText("ROLL");
-        compTurn();
+        if(userTotalScore<100){
+            compTurn();
+        }
+        else{
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            label.setText("You win!");
+            win = true;
+        }
+
     }
 
     public void endTurn(){
@@ -125,6 +134,11 @@ public class MainActivity extends AppCompatActivity {
         turnScore.setText("turn score: ");
         Button rolling = (Button)findViewById(R.id.roll);
         rolling.setText("ROLL");
+        if(compTotalScore>=100){
+            TextView label = (TextView)findViewById(R.id.turninfo);
+            label.setText("You lose :(");
+            win = true;
+        }
     }
 
     public void newGameHandler(View view){
@@ -179,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
             TextView turnScore = (TextView)findViewById(R.id.turnScore);
             turnScore.setText("turn score: "+compTurnScore);
         }
-        if(compTurnScore>9){
+        if(compTurnScore>9||compTotalScore>=100){
             compTurn = false;
             TextView label = (TextView)findViewById(R.id.turninfo);
             label.setText("The computer has ended it's your turn");
