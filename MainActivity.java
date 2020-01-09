@@ -9,9 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
-
 import java.util.Random;
-
 import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    Handler compHandler = new Handler();
+    Runnable compRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            compTurn();
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void rollHandler(View view){
-        GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
-        rollgif.setVisibility(View.VISIBLE);
         if(!compTurn) {
             int score = roll() + 1;
             TextView turnScore = (TextView) findViewById(R.id.turnScore);
@@ -64,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public int roll(){
+        GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
+        rollgif.setVisibility(View.VISIBLE);
         ImageView prevIMG = (ImageView)findViewById(R.id.imageView);
         int randNum = new Random().nextInt(6);
         String img = "d"+randNum;
@@ -123,10 +130,9 @@ public class MainActivity extends AppCompatActivity {
         compTurn = true;
         compRoll();
         if(compTurn){
-
-            compRoll();
+            startTime = System.currentTimeMillis();
+            compHandler.postDelayed(compRunnable, 2000);
         }
-
     }
 
     public void compRoll(){
