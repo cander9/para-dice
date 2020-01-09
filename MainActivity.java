@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.os.Handler;
 
 import java.util.Random;
+
+import pl.droidsonroids.gif.GifImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,14 +21,30 @@ public class MainActivity extends AppCompatActivity {
     int compTotalScore = 0;
     int compTurnScore = 0;
     boolean compTurn = false;
+    long startTime = 0;
+
+    //runs without a timer by reposting this handler at the end of the runnable
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
+            rollgif.setVisibility(View.GONE);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
+        rollgif.setVisibility(View.GONE);
     }
 
     public void rollHandler(View view){
+        GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
+        rollgif.setVisibility(View.VISIBLE);
         if(!compTurn) {
             int score = roll() + 1;
             TextView turnScore = (TextView) findViewById(R.id.turnScore);
@@ -51,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         int resID = getResources().getIdentifier(img , "drawable", getPackageName());
         Drawable image = getResources().getDrawable(resID);
         prevIMG.setImageDrawable(image);
+        startTime = System.currentTimeMillis();
+        timerHandler.postDelayed(timerRunnable, 1000);
         return randNum;
     }
 
@@ -67,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void endTurn(){
-       compTotalScore = compTotalScore+compTurnScore;
-       TextView score = (TextView)findViewById(R.id.compScore);
-       score.setText("computer score: "+compTotalScore);
-       compTurnScore = 0;
-       TextView turnScore = (TextView)findViewById(R.id.turnScore);
-       turnScore.setText("turn score: ");
-       Button rolling = (Button)findViewById(R.id.roll);
-       rolling.setText("ROLL");
+        compTotalScore = compTotalScore+compTurnScore;
+        TextView score = (TextView)findViewById(R.id.compScore);
+        score.setText("computer score: "+compTotalScore);
+        compTurnScore = 0;
+        TextView turnScore = (TextView)findViewById(R.id.turnScore);
+        turnScore.setText("turn score: ");
+        Button rolling = (Button)findViewById(R.id.roll);
+        rolling.setText("ROLL");
     }
 
     public void newGameHandler(View view){
@@ -102,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         compTurn = true;
         compRoll();
         if(compTurn){
-            
+
             compRoll();
         }
 
