@@ -120,9 +120,10 @@
         android:onClick="newGameHandler"/>
 
     <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/rollgif"
         android:layout_width="0dp"
         android:layout_height="178dp"
-        android:src="@drawable/smallroll"
+        android:src="@drawable/rollinggif"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="@+id/imageView"
