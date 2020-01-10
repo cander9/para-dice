@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         public void run() {
             GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
             rollgif.setVisibility(View.GONE);
+            ImageView coverup = (ImageView) findViewById(R.id.coverup);
+            coverup.setVisibility(View.GONE);
         }
     };
 
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
         rollgif.setVisibility(View.GONE);
+        ImageView coverup = (ImageView) findViewById(R.id.coverup);
+        coverup.setVisibility(View.GONE);
     }
 
     public void rollHandler(View view){
@@ -94,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     public int roll(){
         GifImageView rollgif = (GifImageView) findViewById(R.id.rollgif);
         rollgif.setVisibility(View.VISIBLE);
+        ImageView coverup = (ImageView) findViewById(R.id.coverup);
+        coverup.setVisibility(View.VISIBLE);
         ImageView prevIMG = (ImageView)findViewById(R.id.imageView);
         int randNum = new Random().nextInt(6);
         String img = "d"+randNum;
@@ -196,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         if(compTurnScore>9||compTotalScore>=100){
             compTurn = false;
             TextView label = (TextView)findViewById(R.id.turninfo);
-            label.setText("The computer has ended it's your turn");
+            label.setText("The computer has ended its turn.");
             endTurn();
         }
     }
